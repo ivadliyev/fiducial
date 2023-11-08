@@ -4,6 +4,8 @@ using fiducial.web.Data;
 using fiducial.dal;
 using fiducial.dal.Configuration;
 using fiducial.dal.Repositories.Book;
+using fiducial.dal.Factories;
+using fiducial.dal.Seeds;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
-    builder.Services.AddSingleton<LibraryContext>();
+    builder.Services.AddSingleton<IDatabaseConnectionFactory, DatabaseConnectionFactory>();
+
+    //seeds
+    builder.Services.AddSingleton<CreateTables>();
 
     //configuration mapping
     builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
@@ -25,8 +30,8 @@ var app = builder.Build();
 //database initialization
 {
     using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<LibraryContext>();
-    await context.Init();
+    var createTablesSeed = scope.ServiceProvider.GetRequiredService<CreateTables>();
+    await createTablesSeed.Init();
 }
 
 // Configure the HTTP request pipeline.

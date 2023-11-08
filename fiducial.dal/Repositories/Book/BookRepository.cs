@@ -2,32 +2,69 @@ namespace fiducial.dal.Repositories.Book;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Dapper;
+using fiducial.dal.Factories;
 using fiducial.dal.Models;
 
 public class BookRepository : IBookRepository
 {
-    public Task Create(Book book)
+    private readonly IDatabaseConnectionFactory _dbFactory;
+
+    public BookRepository(IDatabaseConnectionFactory dbFactory)
     {
-        throw new NotImplementedException();
+        _dbFactory = dbFactory;
     }
 
-    public Task Delete(int id)
+    public async Task<IEnumerable<Book>> List(string query)
     {
-        throw new NotImplementedException();
+        using var connection = _dbFactory.GetConnection();
+        var sql = """
+            SELECT * FROM Book
+            WHERE (@query IS NULL OR @query = '') OR (Title = @query OR Author = @query)
+        """;
+        return await connection.QueryAsync<Book>(sql, new {query});
     }
 
-    public Task<Book> GetById(int id)
+    public async Task<Book> GetById(int id)
     {
-        throw new NotImplementedException();
+        using var connection = _dbFactory.GetConnection();
+        var sql = """
+            SELECT * FROM Book 
+            WHERE Id = @id
+        """;
+        return await connection.QuerySingleOrDefaultAsync<Book>(sql, new { id });
     }
 
-    public Task<IEnumerable<Book>> List(int id)
+    public async Task Create(Book book)
     {
-        throw new NotImplementedException();
+        using var connection = _dbFactory.GetConnection();
+        var sql = """
+            INSERT INTO Book (Title, Author)
+            VALUES (@Title, @Author)
+        """;
+        await connection.ExecuteAsync(sql, book);
     }
 
-    public Task Update(Book book)
+    public async Task Update(Book book)
     {
-        throw new NotImplementedException();
+        using var connection = _dbFactory.GetConnection();
+        var sql = """
+            UPDATE Book 
+            SET Title = @Title,
+                Author = @Author,
+                IsBorrowed = @IsBorrowed
+            WHERE Id = @Id
+        """;
+        await connection.ExecuteAsync(sql, book);
+    }
+
+    public async Task Delete(int id)
+    {
+        using var connection = _dbFactory.GetConnection();
+        var sql = """
+            DELETE FROM Book 
+            WHERE Id = @id
+        """;
+        await connection.ExecuteAsync(sql, new { id });
     }
 }
