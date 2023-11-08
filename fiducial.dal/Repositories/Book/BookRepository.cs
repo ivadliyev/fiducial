@@ -35,14 +35,15 @@ public class BookRepository : IBookRepository
         return await connection.QuerySingleOrDefaultAsync<Book>(sql, new { id });
     }
 
-    public async Task Create(Book book)
+    public async Task<int> Create(Book book)
     {
         using var connection = _dbFactory.GetConnection();
         var sql = """
             INSERT INTO Book (Title, Author)
-            VALUES (@Title, @Author)
+            VALUES (@Title, @Author);
+            SELECT CAST(last_insert_rowid() AS INT)
         """;
-        await connection.ExecuteAsync(sql, book);
+        return await connection.QuerySingleAsync<int>(sql, book);
     }
 
     public async Task Update(Book book)

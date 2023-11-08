@@ -58,17 +58,51 @@ public class TestBookRepository
     }
 
     [Fact]
-    public async Task CreateBook_WhenCalled_ReturnsBook()
+    public async Task CreateBook_WhenCalled_CreatesBook()
     {
         // Arrange
         var bookToAdd = BooksFixture.GetOneBook();
         var bookRepository = new BookRepository(_connectionFactory);
-        await bookRepository.Create(bookToAdd);
 
         // Act
+        var id = await bookRepository.Create(bookToAdd);
+        var result = await bookRepository.GetById(id);
+
+        // Assert
+        id.Should().BeGreaterThan(0);
+        result.Should().NotBe(null);
+    }
+
+    [Fact]
+    public async Task UpdateBook_WhenCalled_UpdatesBook()
+    {
+        // Arrange
+        var bookToUpdate = BooksFixture.GetBooks()[0];
+        var bookRepository = new BookRepository(_connectionFactory);
+        var newTitle = "Updated title";
+
+        // Act
+        bookToUpdate.Title = newTitle;
+        await bookRepository.Update(bookToUpdate);
+        var result = await bookRepository.GetById(bookToUpdate.Id);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Title.Should().BeEquivalentTo(newTitle);
+    }
+
+    [Fact]
+    public async Task DeleteBook_WhenCalled_DeletesBook()
+    {
+        // Arrange
+        var bookToDelete = BooksFixture.GetBooks()[0];
+        var bookRepository = new BookRepository(_connectionFactory);
+
+        // Act
+        await bookRepository.Delete(bookToDelete.Id);
         var result = await bookRepository.List(null);
 
         // Assert
-        result.Should().Contain(_ => _.Title == bookToAdd.Title);
+        result.Should().NotContainEquivalentOf(bookToDelete);
     }
 }

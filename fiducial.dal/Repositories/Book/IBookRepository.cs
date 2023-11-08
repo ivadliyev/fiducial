@@ -20,8 +20,8 @@ public interface IBookRepository
     /// Creates a new record in Book table
     /// </summary>
     /// <param name="book">Book model</param>
-    /// <returns>Task</returns>
-    Task Create(Book book);
+    /// <returns>integer an id of created record</returns>
+    Task<int> Create(Book book);
     /// <summary>
     /// Update book record
     /// </summary>
