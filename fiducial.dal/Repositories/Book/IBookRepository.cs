@@ -7,9 +7,9 @@ public interface IBookRepository
     /// <summary>
     /// Get all book records from database
     /// </summary>
-    /// <param name="query">Search query</param>
+    /// <param name="query">Search query nullable</param>
     /// <returns>IEnumerable<Book></returns>
-    Task<IEnumerable<Book>> List(string query);
+    Task<IEnumerable<Book>> List(string? query);
     /// <summary>
     /// Get one book by its id
     /// </summary>

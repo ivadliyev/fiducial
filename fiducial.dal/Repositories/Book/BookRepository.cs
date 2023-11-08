@@ -15,7 +15,7 @@ public class BookRepository : IBookRepository
         _dbFactory = dbFactory;
     }
 
-    public async Task<IEnumerable<Book>> List(string query)
+    public async Task<IEnumerable<Book>> List(string? query)
     {
         using var connection = _dbFactory.GetConnection();
         var sql = """
