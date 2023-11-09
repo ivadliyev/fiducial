@@ -10,6 +10,6 @@ public class AutomapperProfileBll: Profile
     {
         CreateMap<Book, BookDto>();
         CreateMap<BookAddDto, Book>();
-        CreateMap<BookAddDto, Book>();
+        CreateMap<BookUpdateDto, Book>();
     }
 }
