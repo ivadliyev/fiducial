@@ -46,6 +46,7 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
+        server-dir: ./www/fiducial/
         local-dir: ./publish/
         server: win6049.site4now.net
         username: ivadliyev-001 
