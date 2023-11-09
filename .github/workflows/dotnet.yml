@@ -47,7 +47,6 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         local-dir: ./publish/
-        server-dir: fiducial/
         server: win6049.site4now.net
         username: ivadliyev-001 
         password: ${{ secrets.FTPPASSWORD }}
