@@ -36,7 +36,7 @@ public class BorrowBookService : IBorrowBookService
     private async Task UpdateIsBorrowed(int id, bool isBorrowed)
     {
         var book = await _bookService.GetById(id) ?? throw new Exception("Book is not found");
-        book.IsBorrowed = false;
+        book.IsBorrowed = isBorrowed;
 
         await _bookService.Update(book.Id, _mapper.Map<BookDto, BookUpdateDto>(book));
     }

@@ -9,7 +9,8 @@ public class AutomapperProfileBll: Profile
     public AutomapperProfileBll()
     {
         CreateMap<Book, BookDto>();
-        CreateMap<BookAddDto, Book>();
+        CreateMap<BookAddDto, Book>()
+            .ForMember(_ => _.IsBorrowed, dto => dto.MapFrom(dto => false));
         CreateMap<BookUpdateDto, Book>();
         CreateMap<BookDto, BookUpdateDto>();
     }

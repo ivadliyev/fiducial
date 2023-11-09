@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using fiducial.web.Data;
 using fiducial.dal;
 using fiducial.dal.Configuration;
 using fiducial.dal.Repositories.Book;

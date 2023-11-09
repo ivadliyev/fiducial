@@ -1,9 +1,82 @@
 ﻿@page "/"
+@using fiducial.bll.Models;
+@using fiducial.bll.Services.Book;
+@using fiducial.bll.Services.BorrowBook;
+@inject IBookService BookService
+@inject IBorrowBookService BorrowBookService
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Books list</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Books list</h1>
 
-Welcome to your new app.
+@if (books == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <input type="text" class="form-control w-auto ms-auto" placeholder="Search" @bind="query" @onblur="ListBooks">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Is borrowed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in books)
+            {
+                <tr>
+                    <td>@book.Id</td>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@(book.IsBorrowed == true ? "Yes" : "No")</td>
+                    <td>
+                        <input type="button" 
+                            value="@(book.IsBorrowed == true ? "Return" : "Borrow")" 
+                            class="btn @(book.IsBorrowed == true ? "btn-warning" : "btn-success") m-1" 
+                            @onclick="(() => book.IsBorrowed == true ? Unborrow(book) : Borrow(book))"
+                        >
+                        <input type="button" value="Delete" class="btn btn-danger m-1" @onclick="(() => Delete(book))">
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+    private IEnumerable<BookDto>? books;
+    private string query;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ListBooks();
+    }
+
+    async Task ListBooks()
+    {
+        books = await BookService.List(query);
+    }
+
+    async Task Borrow(BookDto book)
+    {
+        await BorrowBookService.Borrow(book.Id);
+        await ListBooks();
+    }
+
+    async Task Unborrow(BookDto book)
+    {
+        await BorrowBookService.Unborrow(book.Id);
+        await ListBooks();
+    }
+
+    async Task Delete(BookDto book)
+    {
+        await BookService.Delete(book.Id);
+        await ListBooks();
+    }
+}

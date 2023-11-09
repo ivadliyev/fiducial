@@ -1,0 +1,30 @@
+﻿@page "/book-form"
+@using fiducial.bll.Models;
+@using fiducial.bll.Services.Book;
+@inject IBookService BookService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Add book</PageTitle>
+
+<h1>Add book</h1>
+
+<EditForm Model=@book OnValidSubmit=@Submit>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="d-flex gap-3">
+        <InputText class="form-control w-auto" placeholder="Enter title" @bind-Value=book.Title />
+        <InputText class="form-control w-auto" placeholder="Enter author" @bind-Value=book.Author />
+    </div>
+	<input type="submit" value="Submit" class="btn btn-primary mt-2"/>
+</EditForm>
+
+@code {
+    BookAddDto book = new BookAddDto();
+
+    async Task Submit()
+    {
+        var result = await BookService.Create(book);
+        NavigationManager.NavigateTo("/");
+    }
+}
