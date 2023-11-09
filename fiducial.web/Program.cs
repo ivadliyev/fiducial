@@ -8,6 +8,7 @@ using fiducial.dal.Factories;
 using fiducial.dal.Seeds;
 using fiducial.bll.Services.Book;
 using fiducial.bll.Helpers;
+using fiducial.bll.Services.BorrowBook;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ var builder = WebApplication.CreateBuilder(args);
 
     //services
     builder.Services.AddScoped<IBookService, BookService>();
+    builder.Services.AddScoped<IBorrowBookService, BorrowBookService>();
 
     //automapper profiles
     builder.Services.AddAutoMapper(typeof(AutomapperProfileBll));

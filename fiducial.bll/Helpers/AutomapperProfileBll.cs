@@ -11,5 +11,6 @@ public class AutomapperProfileBll: Profile
         CreateMap<Book, BookDto>();
         CreateMap<BookAddDto, Book>();
         CreateMap<BookUpdateDto, Book>();
+        CreateMap<BookDto, BookUpdateDto>();
     }
 }
